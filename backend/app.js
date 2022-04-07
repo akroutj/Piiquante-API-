@@ -10,6 +10,7 @@ const app = express();
 
 //Récuperation des routes pour les sauces
 const saucesRoutes = require('./routes/sauces');
+const userRoutes = require('./routes/user');
 
 // Connection à la base de données
 mongoose.connect('mongodb+srv://AKjulian:Piiquante@cluster0.ezvvq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/sauces', saucesRoutes);
+app.use('/api/auth', userRoutes);
 
 //Exportation de 'app'
 module.exports = app;
