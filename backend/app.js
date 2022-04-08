@@ -5,12 +5,16 @@ const express = require('express');
 // Mise en place de Mongoose
 const mongoose = require('mongoose');
 
+const path = require('path');
+
 // Déclaration de 'app'
 const app = express();
 
 //Récuperation des routes pour les sauces
 const saucesRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
+
+
 
 // Connection à la base de données
 mongoose.connect('mongodb+srv://AKjulian:Piiquante@cluster0.ezvvq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -32,6 +36,8 @@ app.use((req, res, next) => {
     next();
 });
 
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
 
