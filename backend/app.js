@@ -11,7 +11,7 @@ const path = require('path');
 const app = express();
 
 //Récuperation des routes pour les sauces
-const saucesRoutes = require('./routes/sauces');
+const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
 
@@ -38,8 +38,10 @@ app.use((req, res, next) => {
 
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/sauces', saucesRoutes);
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+
 
 //Exportation de 'app'
 module.exports = app;
+
