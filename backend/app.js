@@ -2,6 +2,9 @@
 //Récupération du module express
 const express = require('express');
 
+// Récupération du module helmet
+const helmet = require("helmet");
+
 // Mise en place de Mongoose
 const mongoose = require('mongoose');
 
@@ -10,6 +13,9 @@ const path = require('path');
 
 // Déclaration de 'app'
 const app = express();
+
+// Mise en place des 9 middlewares helmet
+app.use(helmet());
 
 require('dotenv').config();
 
