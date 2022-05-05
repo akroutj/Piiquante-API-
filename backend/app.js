@@ -14,9 +14,15 @@ const path = require('path');
 // Déclaration de 'app'
 const app = express();
 
-// Mise en place des 9 middlewares helmet
-app.use(helmet());
+// Mise en place de 6 des 9 middlewares helmet
+app.use(helmet(
+    {
+        crossOriginEmbedderPolicy: false,
+        crossOriginOpenerPolicy: false,
+        crossOriginResourcePolicy: false
+    }));
 
+// Configuration de dotenv pour le fichier .env
 require('dotenv').config();
 
 //Récuperation des routes pour les sauces
@@ -48,6 +54,7 @@ app.use((req, res, next) => {
 //Gestion de la source 'image' de manière statique
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+//Routes User & sauce
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
