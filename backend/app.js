@@ -5,10 +5,13 @@ const express = require('express');
 // Mise en place de Mongoose
 const mongoose = require('mongoose');
 
+// Traitement des requètes vers la route 'images'/ Accès au path de notre serveur
 const path = require('path');
 
 // Déclaration de 'app'
 const app = express();
+
+require('dotenv').config();
 
 //Récuperation des routes pour les sauces
 const sauceRoutes = require('./routes/sauce');
@@ -17,7 +20,7 @@ const userRoutes = require('./routes/user');
 
 
 // Connection à la base de données
-mongoose.connect('mongodb+srv://AKjulian:Piiquante@cluster0.ezvvq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect(process.env.SECRET_DB,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -36,8 +39,9 @@ app.use((req, res, next) => {
     next();
 });
 
-
+//Gestion de la source 'image' de manière statique
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
