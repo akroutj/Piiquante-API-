@@ -3,7 +3,7 @@
 const express = require('express');
 
 // Récupération du module helmet
-const helmet = require("helmet");
+//const helmet = require("helmet");
 
 // Mise en place de Mongoose
 const mongoose = require('mongoose');
@@ -15,12 +15,12 @@ const path = require('path');
 const app = express();
 
 // Mise en place de 6 des 9 middlewares helmet
-app.use(helmet(
-    {
-        crossOriginEmbedderPolicy: false,
-        crossOriginOpenerPolicy: false,
-        crossOriginResourcePolicy: false
-    }));
+//app.use(helmet(
+// {
+// crossOriginEmbedderPolicy: false,
+// crossOriginOpenerPolicy: false,
+// crossOriginResourcePolicy: false
+// }));
 
 // Configuration de dotenv pour le fichier .env
 require('dotenv').config();
