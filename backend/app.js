@@ -1,9 +1,6 @@
 
-//Récupération du module express
+// Récupération du module express
 const express = require('express');
-
-// Récupération du module helmet
-//const helmet = require("helmet");
 
 // Mise en place de Mongoose
 const mongoose = require('mongoose');
@@ -14,21 +11,12 @@ const path = require('path');
 // Déclaration de 'app'
 const app = express();
 
-// Mise en place de 6 des 9 middlewares helmet
-//app.use(helmet(
-// {
-// crossOriginEmbedderPolicy: false,
-// crossOriginOpenerPolicy: false,
-// crossOriginResourcePolicy: false
-// }));
-
 // Configuration de dotenv pour le fichier .env
 require('dotenv').config();
 
 //Récuperation des routes pour les sauces
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-
 
 
 // Connection à la base de données
@@ -40,10 +28,10 @@ mongoose.connect(process.env.SECRET_DB,
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-//Fonction similaire à bodyParser (extraction du body JSON pour la methode POST)
+// Fonction similaire à bodyParser (extraction du body JSON pour la methode POST)
 app.use(express.json());
 
-//Mise en place des headers pour acceder à notre API depuis n'importe quelle origine (CORS)
+// Mise en place des headers pour acceder à notre API depuis n'importe quelle origine (CORS)
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -51,14 +39,14 @@ app.use((req, res, next) => {
     next();
 });
 
-//Gestion de la source 'image' de manière statique
+// Gestion de la source 'image' de manière statique
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-//Routes User & sauce
+// Routes User & sauce
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 
-//Exportation de 'app'
+// Exportation de 'app'
 module.exports = app;
 

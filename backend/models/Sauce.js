@@ -1,4 +1,4 @@
-
+// Importation du package mongoose
 const mongoose = require('mongoose');
 
 const sauceSchema = mongoose.Schema({

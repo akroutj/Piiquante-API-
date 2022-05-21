@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-//Création d'un compte utilisateur
+// Création d'un compte utilisateur
 exports.signup = (req, res) => {
 
     bcrypt.hash(req.body.password, 10)
@@ -14,11 +14,12 @@ exports.signup = (req, res) => {
             });
             user.save()
                 .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                .catch(error => res.status(400).json({ error: "coucou" }));
+                .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
 };
 
+// Connection user
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
@@ -41,6 +42,7 @@ exports.login = (req, res, next) => {
                 })
                 .catch(error => res.status(500).json({ error }));
         })
-        .catch(error => res.status(500).json({ error: "b" }));
+        .catch(error => res.status(500).json({ error }));
 
 };
+

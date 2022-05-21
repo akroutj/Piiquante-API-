@@ -12,7 +12,7 @@ const multer = require('../middleware/multer-config');
 // Récupération des controllers sauces
 const sauceCtrl = require('../controllers/sauce');
 
-//CRUD
+// CRUD
 router.get('/', auth, sauceCtrl.getAllSauces);
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 router.post('/', auth, multer, sauceCtrl.createSauce);
