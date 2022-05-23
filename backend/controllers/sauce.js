@@ -2,6 +2,8 @@
 // Récuperation du schema pour les sauces
 const Sauce = require('../models/Sauce');
 
+const jwt = require('jsonwebtoken');
+
 // Récuperation du package FileSystem
 const fs = require('fs');
 
@@ -34,29 +36,54 @@ exports.createSauce = (req, res, next) => {
 
 // Logique metier - Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file ?
-        {
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : { ...req.body };
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        const userId = decodedToken.userId;
 
-    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-        .catch(error => res.status(400).json({ error }));
+        if (req.body.userId && req.body.userId !== userId) {
+            throw 'User ID invalide !';
+        } else {
+            const sauceObject = req.file ?
+                {
+                    ...JSON.parse(req.body.sauce),
+                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                } : { ...req.body };
+
+            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+                .catch(error => res.status(400).json({ error }));
+        }
+    } catch (error) {
+        res.status(403).json({ error: error | 'Requête non autorisée !' })
+    }
 };
 
 // Logique metier - Suppression d'une sauce
 exports.deleteSauce = (req, res) => {
-    Sauce.findOne({ _id: req.params.id })
-        .then(sauce => {
-            const filename = sauce.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
-                Sauce.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-                    .catch(error => res.status(400).json({ error }));
-            });
-        })
-        .catch(error => res.status(500).json({ error }));
+
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        const userId = decodedToken.userId;
+
+        if (req.body.userId && req.body.userId !== userId) {
+            throw 'User ID invalide !';
+        } else {
+            Sauce.findOne({ _id: req.params.id })
+                .then(sauce => {
+                    const filename = sauce.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
+                        Sauce.deleteOne({ _id: req.params.id })
+                            .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
+                            .catch(error => res.status(400).json({ error }));
+                    });
+                })
+                .catch(error => res.status(500).json({ error }));
+        }
+    } catch (error) {
+        res.status(403).json({ error: error | 'Requête non autorisée !' })
+    }
 };
 
 // Logique metier - Likes & Dislikes
@@ -80,7 +107,7 @@ exports.likeSauce = (req, res, next) => {
                             $push: { usersLiked: userId }
                         }
                     )
-                        .then(() => res.status(201).json({ message: 'Vous avez aimé cette sauce!' }))
+                        .then(() => res.status(200).json({ message: 'Vous avez aimé cette sauce!' }))
                         .catch((error) => res.status(400).json({ error }));
                 }
             })
@@ -99,7 +126,7 @@ exports.likeSauce = (req, res, next) => {
                             $push: { usersDisliked: userId }
                         }
                     )
-                        .then(() => res.status(201).json({ message: 'Vous n\'avez pas aimé cette sauce!' }))
+                        .then(() => res.status(200).json({ message: 'Vous n\'avez pas aimé cette sauce!' }))
                         .catch((error) => res.status(400).json({ error }));
                 }
             })
@@ -121,7 +148,7 @@ exports.likeSauce = (req, res, next) => {
                             $pull: { usersLiked: userId }
                         }
                     )
-                        .then(() => res.status(201).json({ message: 'Votre avez retiré votre Like' }))
+                        .then(() => res.status(200).json({ message: 'Votre avez retiré votre Like' }))
                         .catch((error) => res.status(400).json({ error }));
                 }
 
@@ -134,7 +161,7 @@ exports.likeSauce = (req, res, next) => {
                             $pull: { usersDisliked: userId }
                         }
                     )
-                        .then(() => res.status(201).json({ message: 'Votre avez retiré votre Dislike' }))
+                        .then(() => res.status(200).json({ message: 'Votre avez retiré votre Dislike' }))
                         .catch((error) => res.status(400).json({ error }));
                 }
             })
