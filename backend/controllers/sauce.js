@@ -36,56 +36,50 @@ exports.createSauce = (req, res, next) => {
 
 // Logique metier - Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
-        const userId = decodedToken.userId;
 
-        if (req.body.userId && req.body.userId !== userId) {
-            throw 'User ID invalide !';
-        } else {
-            const sauceObject = req.file ?
-                {
-                    ...JSON.parse(req.body.sauce),
-                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                } : { ...req.body };
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const userId = decodedToken.userId;
 
-            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-                .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-                .catch(error => res.status(400).json({ error }));
-        }
-    } catch (error) {
-        res.status(403).json({ error: error | 'Requête non autorisée !' })
-    }
+    const sauceObject = req.file ?
+        {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body };
+
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            if (sauce.userId == userId) {
+                Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+                    .catch(error => res.status(400).json({ error }));
+            } else {
+                res.status(401).json({ message: 'Requête non autorisée !' });
+            }
+        }).catch(error => res.status(500).json({ error }));
 };
 
 // Logique metier - Suppression d'une sauce
 exports.deleteSauce = (req, res) => {
 
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
-        const userId = decodedToken.userId;
-        let sauce = req.params.id;
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const userId = decodedToken.userId;
 
-
-        if (req.body.userId && sauce.userId !== userId) {
-            throw 'User ID invalide !';
-        } else {
-            Sauce.findOne({ _id: req.params.id })
-                .then(sauce => {
-                    const filename = sauce.imageUrl.split('/images/')[1];
-                    fs.unlink(`images/${filename}`, () => {
-                        Sauce.deleteOne({ _id: req.params.id })
-                            .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-                            .catch(error => res.status(400).json({ error }));
-                    });
-                })
-                .catch(error => res.status(500).json({ error }));
-        }
-    } catch (error) {
-        res.status(403).json({ error: error | 'Requête non autorisée !' })
-    }
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            if (sauce.userId == userId) {
+                const filename = sauce.imageUrl.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
+                    Sauce.deleteOne({ _id: req.params.id })
+                        .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
+                        .catch(error => res.status(400).json({ error }));
+                });
+            } else {
+                res.status(401).json({ message: 'Requête non autorisée !' });
+            }
+        })
+        .catch(error => res.status(500).json({ error }));
 };
 
 // Logique metier - Likes & Dislikes
