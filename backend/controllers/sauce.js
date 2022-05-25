@@ -66,8 +66,10 @@ exports.deleteSauce = (req, res) => {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
         const userId = decodedToken.userId;
+        let sauce = req.params.id;
 
-        if (req.body.userId && req.body.userId !== userId) {
+
+        if (req.body.userId && sauce.userId !== userId) {
             throw 'User ID invalide !';
         } else {
             Sauce.findOne({ _id: req.params.id })
