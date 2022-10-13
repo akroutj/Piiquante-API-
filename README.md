@@ -1,15 +1,12 @@
-# Hot Takes 
-
-
 
 # A propos
 
-Le projet consiste à construire un réseau social interne pour les employés de Groupomania. Le but de cet outil est de faciliter les interactions entre collègues. Le département RH de Groupomania a imaginé plusieurs fonctionnalités pour favoriser les échanges entre collègues.
+Construction d'une API en backend pour le site HOT TAKES qui est une galerie de sauces permettant aux utilisateurs de télécharger leurs sauces piquantes préférées et de liker ou disliker les sauces que d'autres partagent. Le front-end de l'application a été développé au préalable et a été précompilé après des tests internes.
 
 # Technologies utilisées
 
 
-* Back-end : Node.js, MongoDB, Mongoose, Express
+*  Node.js, MongoDB, Mongoose, Express
 
 # Installation
 
