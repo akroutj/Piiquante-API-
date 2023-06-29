@@ -20,14 +20,14 @@ Construction d'une API en backend pour le site HOT TAKES qui est une galerie de 
 
 ### cloner le dépot
 
-`$ git clone https://github.com/akroutj/Social-Network.git`
+`$ git clone https://github.com/akroutj/Piiquante-API-.git`
 
 * Ouvrir le dossier dans votre éditeur de texte
 
 ## Backend :
 
 * Télécharger __NodeJS__ si besoin
-* Créer un fichier `.env`dans le dossier __backend__ et veuillez rentrer le host, les identifiants de votre utilisateur admin et le nom de la base de données que vous souhaitez créer `SECRET_DB = "mongodb+srv//User1:tabasco@cluster0.ezvvq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"`
+* Créer un fichier `.env`dans le dossier __backend__ et veuillez rentrer le host, les identifiants de votre utilisateur admin et le nom de la base de données que vous souhaitez créer `SECRET_DB = "mongodb+srv://User1:tabasco@cluster0.ezvvq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"`
 * Se rendre dans le dossier Backend via un terminal et installer __Node__ et toute les dépendances avec `$ npm i`
 * Lancer le serveur avec `$ nodemon`
 
